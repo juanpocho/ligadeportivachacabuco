@@ -28,12 +28,35 @@
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 antialiased selection:bg-brand-500 selection:text-white">
 
-    <!-- ======================================================================
-         CONFIGURACIÓN: pegá acá el ID de la planilla de Google Sheets.
-         Es el texto largo de la dirección, entre /d/ y /edit. Ejemplo:
-         https://docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit
-         Si lo dejás vacío, la página muestra datos de ejemplo.
-         ====================================================================== -->
+<div id="contenedor-datos">Cargando datos de la planilla...</div>
+
+<script>
+    // PEGA AQUÍ ENTRE LAS COMILLAS LA URL LARGA QUE COPIASTE DE GOOGLE
+    const urlAPI = "https://script.google.com/macros/s/TU_URL_LARGA_AQUI/exec";
+
+    fetch(urlAPI)
+        .then(response => response.json())
+        .then(data => {
+            const contenedor = document.getElementById('contenedor-datos');
+            contenedor.innerHTML = ''; // Limpia el texto de "cargando"
+
+            // Recorre cada fila de tu hoja de cálculo
+            data.forEach(item => {
+                const elementoDiv = document.createElement('div');
+                // Aquí usamos los nombres exactos de las columnas de tu Google Sheet
+                elementoDiv.innerHTML = `
+                    <h3>${item.titulo}</h3>
+                    <p>${item.descripcion}</p>
+                    <hr>
+                `;
+                contenedor.appendChild(elementoDiv);
+            });
+        })
+        .catch(error => {
+            console.error('Error al conectar:', error);
+            document.getElementById('contenedor-datos').innerText = 'No se pudieron cargar los datos.';
+        });
+</script>
     <script>
         const SHEET_ID = '1Kr716s2O5w2lw_A8O4UCneRcYVCEKflg';
     </script>
