@@ -20,7 +20,7 @@
             </div>
             <nav class="flex gap-5 text-sm font-semibold">
                 <a href="#posiciones" class="hover:text-emerald-400 transition">Posiciones</a>
-                <a href="#resultados" class="hover:text-emerald-400 transition">Resultados</a>
+                <a href="#fixture" class="hover:text-emerald-400 transition">Fixture y Resultados</a>
                 <a href="#sponsors" class="hover:text-emerald-400 transition">Sponsors</a>
             </nav>
         </div>
@@ -74,40 +74,42 @@
                     </thead>
                     <tbody class="divide-y divide-slate-700/40">
                         <tr>
-                            <td colspan="10" class="text-center py-8 text-slate-400">Conectá tus enlaces CSV de Google Sheets para ver los datos.</td>
+                            <td colspan="10" class="text-center py-8 text-slate-400">Cargando datos...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- SECCIÓN: RESULTADOS Y SPONSORS -->
-        <section id="resultados" class="grid md:grid-cols-2 gap-6">
-            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6 shadow-xl">
-                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-amber-500"></span> Últimos Resultados
-                </h3>
-                <div class="space-y-3 text-sm text-slate-300">
-                    <div class="bg-slate-900/60 p-3 rounded-lg flex justify-between items-center border border-slate-700/40">
-                        <span>Club Local <strong class="text-white">2</strong></span>
-                        <span class="text-xs text-slate-500 uppercase">Final</span>
-                        <span><strong class="text-white">1</strong> Club Visitante</span>
-                    </div>
-                    <div class="bg-slate-900/60 p-3 rounded-lg flex justify-between items-center border border-slate-700/40">
-                        <span>Equipo C <strong class="text-white">0</strong></span>
-                        <span class="text-xs text-slate-500 uppercase">Final</span>
-                        <span><strong class="text-white">0</strong> Equipo D</span>
-                    </div>
+        <!-- SECCIÓN: FIXTURE Y RESULTADOS FECHA POR FECHA -->
+        <section id="fixture" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-amber-400"></span> 
+                    Fixture y Resultados — <span id="titulo-categoria-fixture" class="text-amber-400">Primera División</span>
+                </h2>
+                <div class="flex items-center gap-2">
+                    <label for="select-fecha" class="text-xs uppercase font-bold text-slate-400">Seleccionar:</label>
+                    <select id="select-fecha" onchange="renderizarPartidos()" 
+                        class="bg-slate-900 border border-slate-700 text-white text-sm font-semibold rounded-lg px-4 py-2 outline-none focus:border-emerald-500">
+                        <option value="">Cargando fechas...</option>
+                    </select>
                 </div>
             </div>
 
-            <div id="sponsors" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6 shadow-xl flex flex-col justify-center items-center text-center">
-                <h3 class="text-lg font-bold mb-2">Auspiciantes Oficiales</h3>
-                <p class="text-xs text-slate-400 mb-4">Acompañan el desarrollo del deporte local.</p>
-                <div class="flex flex-wrap gap-4 items-center justify-center">
-                    <img src="sponsor1.png" alt="Sponsor 1" class="max-h-14 object-contain rounded" onerror="this.remove()">
-                    <img src="sponsor2.png" alt="Sponsor 2" class="max-h-14 object-contain rounded" onerror="this.remove()">
-                </div>
+            <div id="lista-partidos" class="grid md:grid-cols-2 gap-4">
+                <p class="text-slate-400 text-sm col-span-2 text-center py-6">Conectá el enlace CSV de la pestaña Resultados en el código.</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: SPONSORS -->
+        <section id="sponsors" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6 shadow-xl flex flex-col justify-center items-center text-center">
+            <h3 class="text-lg font-bold mb-2">Auspiciantes Oficiales</h3>
+            <p class="text-xs text-slate-400 mb-4">Acompañan el desarrollo del deporte local.</p>
+            <div class="flex flex-wrap gap-6 items-center justify-center">
+                <img src="sponsor1.png" alt="Sponsor 1" class="max-h-14 object-contain rounded" onerror="this.remove()">
+                <img src="sponsor2.png" alt="Sponsor 2" class="max-h-14 object-contain rounded" onerror="this.remove()">
+                <img src="sponsor3.png" alt="Sponsor 3" class="max-h-14 object-contain rounded" onerror="this.remove()">
             </div>
         </section>
 
@@ -135,9 +137,140 @@
             }
         };
 
+        // 2. PEGA AQUÍ EL ENLACE CSV DE LA PESTAÑA "Resultados"
+        const URL_RESULTADOS_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTM8z7E1hrPT1j5iaJMlGlY9FwKefToG0B4w7ULqJE30uk8nsxSBqHWXL2tz6HOgQ/pub?gid=1159073255&single=true&output=csv";
+
+        let categoriaActual = "primera";
+        let todosLosPartidos = [];
+
+        // Función auxiliar para leer CSV respetando comas internas si las hubiera
+        function parsearCSV(texto) {
+            return texto.trim().split(/\r?\n/).map(linea => linea.split(","));
+        }
+
+        async function cargarTodosLosPartidos() {
+            if (!URL_RESULTADOS_CSV || URL_RESULTADOS_CSV.includes("PEGA_AQUÍ")) return;
+            try {
+                const res = await fetch(URL_RESULTADOS_CSV);
+                if (!res.ok) throw new Error("Error al leer resultados");
+                const texto = await res.text();
+                const filas = parsearCSV(texto);
+                
+                todosLosPartidos = [];
+                for (let i = 1; i < filas.length; i++) {
+                    const col = filas[i];
+                    if (col.length >= 8 && col[0].trim() !== "" && col[4].trim() !== "") {
+                        todosLosPartidos.push({
+                            categoria: col[0].trim(),
+                            fecha: col[1].trim(),
+                            estado: col[2].trim(),
+                            escudoLocal: col[3].trim(),
+                            local: col[4].trim(),
+                            golesLocal: col[5].trim(),
+                            golesVisitante: col[6].trim(),
+                            visitante: col[7].trim(),
+                            escudoVisitante: col[8] ? col[8].trim() : ""
+                        });
+                    }
+                }
+                actualizarSelectorFechas();
+            } catch (e) {
+                console.error("Error cargando fixture:", e);
+            }
+        }
+
+        function actualizarSelectorFechas() {
+            const info = URLS_CATEGORIAS[categoriaActual];
+            const select = document.getElementById("select-fecha");
+            const partidosCat = todosLosPartidos.filter(
+                p => p.categoria.toLowerCase() === info.filtroSheet.toLowerCase()
+            );
+
+            // Obtener fechas únicas ordenadas
+            const fechasUnicas = [...new Set(partidosCat.map(p => p.fecha))].sort((a, b) => Number(a) - Number(b));
+
+            select.innerHTML = "";
+            if (fechasUnicas.length === 0) {
+                select.innerHTML = `<option value="">Sin fechas cargadas</option>`;
+                renderizarPartidos();
+                return;
+            }
+
+            fechasUnicas.forEach(f => {
+                const opt = document.createElement("option");
+                opt.value = f;
+                opt.textContent = `Fecha ${f}`;
+                select.appendChild(opt);
+            });
+
+            // Seleccionar por defecto la última fecha cargada
+            select.value = fechasUnicas[fechasUnicas.length - 1];
+            renderizarPartidos();
+        }
+
+        function renderizarPartidos() {
+            const contenedor = document.getElementById("lista-partidos");
+            const fechaSeleccionada = document.getElementById("select-fecha").value;
+            const info = URLS_CATEGORIAS[categoriaActual];
+
+            if (!URL_RESULTADOS_CSV || URL_RESULTADOS_CSV.includes("PEGA_AQUÍ")) {
+                contenedor.innerHTML = `<p class="text-amber-400 text-sm col-span-2 text-center py-6">Falta pegar el enlace CSV de la pestaña <strong>Resultados</strong> en el código.</p>`;
+                return;
+            }
+
+            const partidosFiltrados = todosLosPartidos.filter(
+                p => p.categoria.toLowerCase() === info.filtroSheet.toLowerCase() && p.fecha === fechaSeleccionada
+            );
+
+            if (partidosFiltrados.length === 0) {
+                contenedor.innerHTML = `<p class="text-slate-400 text-sm col-span-2 text-center py-6">No hay partidos cargados para ${info.nombre} en esta fecha.</p>`;
+                return;
+            }
+
+            contenedor.innerHTML = "";
+            partidosFiltrados.forEach(p => {
+                const imgLocal = p.escudoLocal 
+                    ? `<img src="${p.escudoLocal}" alt="" class="w-8 h-8 object-contain rounded-full bg-slate-800 p-0.5" onerror="this.style.display='none'">` 
+                    : "";
+                const imgVisitante = p.escudoVisitante 
+                    ? `<img src="${p.escudoVisitante}" alt="" class="w-8 h-8 object-contain rounded-full bg-slate-800 p-0.5" onerror="this.style.display='none'">` 
+                    : "";
+
+                const tieneGoles = p.golesLocal !== "" && p.golesVisitante !== "";
+                const marcador = tieneGoles ? `${p.golesLocal} - ${p.golesVisitante}` : "VS";
+                const colorEstado = p.estado.toLowerCase() === "final" ? "text-emerald-400" : "text-amber-400";
+
+                const card = document.createElement("div");
+                card.className = "bg-slate-900/70 p-4 rounded-xl border border-slate-700/50 flex flex-col justify-between gap-2 hover:border-slate-600 transition";
+                card.innerHTML = `
+                    <div class="text-center">
+                        <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-800 ${colorEstado}">
+                            ${p.estado || "Programado"}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 py-1">
+                        <div class="flex items-center gap-2.5 w-5/12 justify-end text-right">
+                            <span class="font-bold text-white text-sm leading-tight">${p.local}</span>
+                            ${imgLocal}
+                        </div>
+                        <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-center font-black tracking-wider text-white min-w-[68px]">
+                            ${marcador}
+                        </div>
+                        <div class="flex items-center gap-2.5 w-5/12 text-left">
+                            ${imgVisitante}
+                            <span class="font-bold text-white text-sm leading-tight">${p.visitante}</span>
+                        </div>
+                    </div>
+                `;
+                contenedor.appendChild(card);
+            });
+        }
+
         async function cambiarCategoria(categoriaKey) {
+            categoriaActual = categoriaKey;
             const info = URLS_CATEGORIAS[categoriaKey];
             document.getElementById("titulo-categoria").textContent = info.nombre;
+            document.getElementById("titulo-categoria-fixture").textContent = info.nombre;
 
             // Actualizar estilos de botones
             document.querySelectorAll(".cat-btn").forEach(btn => {
@@ -145,10 +278,13 @@
             });
             document.getElementById(`btn-${categoriaKey}`).className = "cat-btn px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wide transition bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20";
 
+            // Actualizar fechas del fixture para esta categoría
+            actualizarSelectorFechas();
+
+            // Cargar tabla de posiciones
             const tbody = document.querySelector("#tabla-posiciones tbody");
-            
-            if (info.csv.includes("PEGAR_ENLACE")) {
-                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-slate-400">Falta pegar el enlace CSV de <strong>${info.nombre}</strong> en el código.</td></tr>`;
+            if (!info.csv || info.csv.includes("PEGA_AQUÍ") || info.csv.trim() === "") {
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-amber-400">Falta configurar el enlace CSV de <strong>${info.nombre}</strong>.</td></tr>`;
                 return;
             }
 
@@ -156,13 +292,17 @@
 
             try {
                 const respuesta = await fetch(info.csv);
+                if (!respuesta.ok) throw new Error("No se pudo conectar con la planilla.");
+                
                 const datosTexto = await respuesta.text();
-                const filas = datosTexto.split("\n").map(fila => fila.split(","));
+                const filas = parsearCSV(datosTexto);
                 tbody.innerHTML = "";
 
+                let filasAgregadas = 0;
                 for (let i = 1; i < filas.length; i++) {
                     const col = filas[i];
-                    if (col.length >= 11 && col[2].trim() !== "") {
+                    if (col.length >= 11 && col[2] && col[2].trim() !== "") {
+                        filasAgregadas++;
                         const [pos, escudo, equipo, pts, pj, pg, pe, pp, gf, gc, dg] = col;
                         const imgTag = escudo.trim() 
                             ? `<img src="${escudo.trim()}" alt="" class="w-6 h-6 object-contain rounded-full bg-slate-700/50" onerror="this.style.display='none'">` 
@@ -188,13 +328,20 @@
                         tbody.appendChild(tr);
                     }
                 }
+
+                if (filasAgregadas === 0) {
+                    tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-slate-400">La pestaña ${info.nombre} está vacía.</td></tr>`;
+                }
             } catch (error) {
-                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-red-400">Error al cargar los datos. Verificá que la pestaña esté publicada como CSV.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-red-400">Error al cargar ${info.nombre}. Verificá que la pestaña esté publicada como CSV.</td></tr>`;
             }
         }
 
-        // Cargar Primera División por defecto al abrir la página
-        cambiarCategoria('primera');
+        // Inicializar todo al cargar la página
+        (async () => {
+            await cargarTodosLosPartidos();
+            cambiarCategoria('primera');
+        })();
     </script>
 </body>
 </html>
