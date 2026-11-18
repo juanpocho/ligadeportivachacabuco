@@ -1,906 +1,200 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liga Deportiva Local</title>
+    <title>Liga Oficial de Fútbol - Temporada 2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --brand-50: #f0fdf4; --brand-100: #dcfce7; --brand-400: #4ade80; --brand-500: #22c55e;
-            --brand-600: #16a34a; --brand-700: #15803d; --brand-900: #14532d;
-        }
-        body { font-family: 'Inter', sans-serif; }
-        .skeleton { background: linear-gradient(90deg, rgba(148,163,184,.15), rgba(148,163,184,.3), rgba(148,163,184,.15)); background-size: 200% 100%; animation: sk 1.2s infinite; border-radius: .75rem; }
-        @keyframes sk { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
-    </style>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: { brand: {
-                50: 'var(--brand-50)', 100: 'var(--brand-100)', 400: 'var(--brand-400)', 500: 'var(--brand-500)',
-                600: 'var(--brand-600)', 700: 'var(--brand-700)', 900: 'var(--brand-900)'
-            } } } }
-        }
-    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 antialiased selection:bg-brand-500 selection:text-white">
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
 
-    <!-- ======================================================================
-         CONFIGURACIÓN: pegá acá el ID de la planilla de Google Sheets.
-         Es el texto largo de la dirección, entre /d/ y /edit. Ejemplo:
-         https://docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit
-         Si lo dejás vacío, la página muestra datos de ejemplo.
-         ====================================================================== -->
-    <script>
-        const SHEET_ID = '1Kr716s2O5w2lw_A8O4UCneRcYVCEKflg';
-    </script>
-
-    <!-- Barra de Navegación -->
-    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white shadow-md">
-                        <i class="fa-solid fa-trophy text-lg"></i>
-                    </div>
-                    <div>
-                        <span id="nav-nombre" class="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white block leading-none">LIGA LOCAL</span>
-                        <span id="nav-temporada" class="text-xs font-medium text-brand-600 dark:text-brand-400 tracking-wider uppercase">Temporada</span>
-                    </div>
-                </div>
-
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#inicio" class="text-sm font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400 transition">Inicio</a>
-                    <a href="#posiciones" class="text-sm font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400 transition">Posiciones</a>
-                    <a href="#partidos" class="text-sm font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400 transition">Partidos</a>
-                    <a href="#federales" class="text-sm font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400 transition">Torneos Federales</a>
-                    <a href="#estadisticas" class="text-sm font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400 transition">Goleadores</a>
-                    <a href="#noticias" class="text-sm font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400 transition">Noticias</a>
-                </nav>
-
-                <div class="flex items-center space-x-3">
-                    <button id="theme-toggle" aria-label="Cambiar tema" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
-                        <i id="theme-icon" class="fa-solid fa-moon"></i>
-                    </button>
-                    <button onclick="openInscriptionModal()" class="btn-inscribir hidden sm:inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 shadow-sm transition">
-                        <i class="fa-solid fa-user-plus mr-2"></i> Inscribir Equipo
-                    </button>
-                    <button id="mobile-menu-btn" aria-label="Abrir menú" class="md:hidden p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
+    <!-- ENCABEZADO -->
+    <header class="bg-slate-950 border-b border-slate-800 py-6 shadow-lg">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <img src="logo-liga.png" alt="Logo Liga" class="w-12 h-12 object-contain" onerror="this.style.display='none'">
+                <div>
+                    <h1 class="text-2xl font-black tracking-wider uppercase text-emerald-400">Torneo Oficial 2027</h1>
+                    <p class="text-xs text-slate-400">Primera División · Sub-23 · Fútbol Femenino</p>
                 </div>
             </div>
-        </div>
-
-        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-2">
-            <a href="#inicio" class="block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Inicio</a>
-            <a href="#posiciones" class="block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Posiciones</a>
-            <a href="#partidos" class="block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Partidos</a>
-            <a href="#federales" class="block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Torneos Federales</a>
-            <a href="#estadisticas" class="block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Goleadores</a>
-            <a href="#noticias" class="block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">Noticias</a>
-            <button onclick="openInscriptionModal()" class="btn-inscribir w-full mt-2 flex items-center justify-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700">
-                <i class="fa-solid fa-user-plus mr-2"></i> Inscribir Equipo
-            </button>
+            <nav class="flex gap-5 text-sm font-semibold">
+                <a href="#posiciones" class="hover:text-emerald-400 transition">Posiciones</a>
+                <a href="#resultados" class="hover:text-emerald-400 transition">Resultados</a>
+                <a href="#sponsors" class="hover:text-emerald-400 transition">Sponsors</a>
+            </nav>
         </div>
     </header>
 
-    <!-- Aviso de error / demo -->
-    <div id="aviso" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4"></div>
+    <main class="container mx-auto px-4 py-8 space-y-10 flex-grow">
 
-    <!-- Hero -->
-    <section id="inicio" class="relative overflow-hidden bg-slate-900 text-white py-16 sm:py-24">
-        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(var(--brand-500)_1px,transparent_1px)] [background-size:20px_20px]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div id="hero-badge" class="inline-flex items-center px-3 py-1 rounded-full bg-brand-500/20 border border-brand-500/30 text-brand-400 text-xs font-semibold tracking-wide uppercase">
-                        <span class="w-2 h-2 rounded-full bg-brand-500 mr-2 animate-pulse"></span>
-                        <span id="hero-badge-text">Cargando…</span>
-                    </div>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                        <span id="hero-titulo"></span> <span id="hero-titulo-dest" class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-emerald-300"></span>
-                    </h1>
-                    <p id="hero-subtitulo" class="text-slate-300 text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0"></p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-                        <a href="#posiciones" class="px-6 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold shadow-lg transition text-center">Ver Tabla de Posiciones</a>
-                        <a href="#partidos" class="px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold border border-slate-700 transition text-center">Próxima Fecha</a>
-                    </div>
-                </div>
-                <div class="lg:col-span-5" id="hero-partido">
-                    <div class="skeleton h-64"></div>
-                </div>
-            </div>
+        <!-- SELECTOR DE CATEGORÍAS -->
+        <div class="flex flex-wrap justify-center gap-3">
+            <button onclick="cambiarCategoria('primera')" id="btn-primera" 
+                class="cat-btn px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wide transition bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20">
+                Primera División
+            </button>
+            <button onclick="cambiarCategoria('sub23')" id="btn-sub23" 
+                class="cat-btn px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wide transition bg-slate-800 text-slate-300 hover:bg-slate-700">
+                Sub-23
+            </button>
+            <button onclick="cambiarCategoria('femenino')" id="btn-femenino" 
+                class="cat-btn px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wide transition bg-slate-800 text-slate-300 hover:bg-slate-700">
+                Femenino
+            </button>
         </div>
-    </section>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+        <!-- SECCIÓN: TABLA DE POSICIONES -->
+        <section id="posiciones" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span> 
+                    Tabla de Posiciones — <span id="titulo-categoria" class="text-emerald-400">Primera División</span>
+                </h2>
+                <span class="text-xs text-slate-400 bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full w-fit">
+                    Actualización en vivo
+                </span>
+            </div>
 
-        <!-- Tabla de Posiciones -->
-        <section id="posiciones" class="scroll-mt-24">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-                <div>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Tabla de Posiciones</h2>
-                    <p id="standings-subtitle" class="text-sm text-slate-500 dark:text-slate-400 mt-1">Clasificación oficial</p>
-                </div>
-                <div id="cat-buttons" class="flex flex-wrap gap-1.5 rounded-xl bg-slate-200/70 dark:bg-slate-800 p-1.5 self-start"></div>
-            </div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100/80 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                                <th class="py-4 px-4 w-12 text-center">#</th>
-                                <th class="py-4 px-4">Club</th>
-                                <th class="py-4 px-3 text-center" title="Puntos">PTS</th>
-                                <th class="py-4 px-3 text-center" title="Partidos Jugados">PJ</th>
-                                <th class="py-4 px-3 text-center hidden sm:table-cell" title="Ganados">PG</th>
-                                <th class="py-4 px-3 text-center hidden sm:table-cell" title="Empatados">PE</th>
-                                <th class="py-4 px-3 text-center hidden sm:table-cell" title="Perdidos">PP</th>
-                                <th class="py-4 px-3 text-center hidden md:table-cell" title="Goles a favor">GF</th>
-                                <th class="py-4 px-3 text-center hidden md:table-cell" title="Goles en contra">GC</th>
-                                <th class="py-4 px-3 text-center hidden md:table-cell" title="Diferencia de Gol">DG</th>
-                                <th class="py-4 px-4 text-center hidden lg:table-cell">Últimos 5</th>
-                            </tr>
-                        </thead>
-                        <tbody id="standings-body" class="divide-y divide-slate-200 dark:divide-slate-700/70 text-sm">
-                            <tr><td colspan="11" class="p-4"><div class="skeleton h-40"></div></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="standings-legend" class="bg-slate-50 dark:bg-slate-800/50 px-4 py-3 border-t border-slate-200 dark:border-slate-700 flex flex-wrap gap-4 text-xs text-slate-500 dark:text-slate-400"></div>
-            </div>
-            <p id="standings-nota" class="hidden text-xs text-slate-500 dark:text-slate-400 mt-2"></p>
-        </section>
-
-        <!-- Fixture y Resultados -->
-        <section id="partidos" class="scroll-mt-24">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-                <div>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Fixture y Resultados</h2>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Filtrá por categoría y navegá entre jornadas</p>
-                </div>
-                <div class="flex flex-wrap items-center gap-3">
-                    <select id="match-category-filter" onchange="renderMatches()" class="px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500">
-                        <option value="todas">Todas las categorías</option>
-                    </select>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="changeMatchday(-1)" class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition" aria-label="Jornada anterior">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <span id="matchday-label" class="px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold text-sm min-w-[125px] text-center">Jornada</span>
-                        <button onclick="changeMatchday(1)" class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition" aria-label="Jornada siguiente">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div id="matches-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <div class="skeleton h-40"></div><div class="skeleton h-40"></div><div class="skeleton h-40"></div>
+            <div class="overflow-x-auto">
+                <table id="tabla-posiciones" class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-700 text-slate-400 uppercase text-xs">
+                            <th class="py-3 px-3 w-12">Pos</th>
+                            <th class="py-3 px-3">Equipo</th>
+                            <th class="py-3 px-2 text-center font-bold text-white">Pts</th>
+                            <th class="py-3 px-2 text-center">PJ</th>
+                            <th class="py-3 px-2 text-center">PG</th>
+                            <th class="py-3 px-2 text-center">PE</th>
+                            <th class="py-3 px-2 text-center">PP</th>
+                            <th class="py-3 px-2 text-center">GF</th>
+                            <th class="py-3 px-2 text-center">GC</th>
+                            <th class="py-3 px-2 text-center">DG</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/40">
+                        <tr>
+                            <td colspan="10" class="text-center py-8 text-slate-400">Conectá tus enlaces CSV de Google Sheets para ver los datos.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
-        <!-- Torneos Federales -->
-        <section id="federales" class="scroll-mt-24">
-            <div class="bg-gradient-to-r from-sky-900 via-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-10 text-white shadow-xl border border-sky-800/50 relative overflow-hidden">
-                <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="mb-8 relative z-10">
-                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-xs font-bold uppercase tracking-wider mb-3">
-                        <i class="fa-solid fa-earth-americas mr-2"></i> Consejo Federal AFA
+        <!-- SECCIÓN: RESULTADOS Y SPONSORS -->
+        <section id="resultados" class="grid md:grid-cols-2 gap-6">
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6 shadow-xl">
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-amber-500"></span> Últimos Resultados
+                </h3>
+                <div class="space-y-3 text-sm text-slate-300">
+                    <div class="bg-slate-900/60 p-3 rounded-lg flex justify-between items-center border border-slate-700/40">
+                        <span>Club Local <strong class="text-white">2</strong></span>
+                        <span class="text-xs text-slate-500 uppercase">Final</span>
+                        <span><strong class="text-white">1</strong> Club Visitante</span>
                     </div>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Nuestros Clubes en Torneos Federales</h2>
-                    <p class="text-slate-300 text-sm sm:text-base mt-1 max-w-2xl">Seguimiento de los equipos de nuestra liga que representan a la localidad en torneos regionales.</p>
+                    <div class="bg-slate-900/60 p-3 rounded-lg flex justify-between items-center border border-slate-700/40">
+                        <span>Equipo C <strong class="text-white">0</strong></span>
+                        <span class="text-xs text-slate-500 uppercase">Final</span>
+                        <span><strong class="text-white">0</strong> Equipo D</span>
+                    </div>
                 </div>
-                <div id="federales-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10"></div>
             </div>
-        </section>
 
-        <!-- Estadísticas -->
-        <section id="estadisticas" class="scroll-mt-24">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-6">Líderes del Torneo</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-                    <div class="flex items-center space-x-3 mb-5">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-lg"><i class="fa-solid fa-futbol"></i></div>
-                        <div>
-                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Tabla de Goleadores</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Máximos artilleros del campeonato</p>
-                        </div>
-                    </div>
-                    <div class="space-y-3" id="scorers-list"></div>
-                </div>
-
-                <div class="space-y-6">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-                        <div class="flex items-center space-x-3 mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-lg"><i class="fa-solid fa-hands-holding"></i></div>
-                            <div>
-                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">Valla Menos Vencida</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Arqueros con menor promedio de goles recibidos</p>
-                            </div>
-                        </div>
-                        <div class="space-y-3" id="keepers-list"></div>
-                    </div>
-
-                    <div id="boletin" class="hidden bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-700">
-                        <div class="flex items-start space-x-4">
-                            <div class="w-12 h-12 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-file-lines"></i></div>
-                            <div>
-                                <h3 id="boletin-titulo" class="font-bold text-lg"></h3>
-                                <p id="boletin-texto" class="text-sm text-slate-300 mt-1"></p>
-                                <a id="boletin-link" href="#" target="_blank" rel="noopener" class="hidden mt-4 items-center text-xs font-bold uppercase tracking-wider text-brand-400 hover:text-brand-300 transition">
-                                    <i class="fa-solid fa-download mr-2"></i> Descargar boletín
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <div id="sponsors" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6 shadow-xl flex flex-col justify-center items-center text-center">
+                <h3 class="text-lg font-bold mb-2">Auspiciantes Oficiales</h3>
+                <p class="text-xs text-slate-400 mb-4">Acompañan el desarrollo del deporte local.</p>
+                <div class="flex flex-wrap gap-4 items-center justify-center">
+                    <img src="sponsor1.png" alt="Sponsor 1" class="max-h-14 object-contain rounded" onerror="this.remove()">
+                    <img src="sponsor2.png" alt="Sponsor 2" class="max-h-14 object-contain rounded" onerror="this.remove()">
                 </div>
             </div>
         </section>
 
-        <!-- Noticias -->
-        <section id="noticias" class="scroll-mt-24">
-            <div class="mb-6">
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Actualidad de la Liga</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Crónicas, entrevistas y comunicados oficiales</p>
-            </div>
-            <div id="noticias-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-        </section>
     </main>
 
-    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="col-span-1 md:col-span-2 space-y-4">
-                    <div class="flex items-center space-x-3 text-white">
-                        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center"><i class="fa-solid fa-trophy text-sm"></i></div>
-                        <span id="footer-nombre" class="font-extrabold text-lg tracking-tight uppercase"></span>
-                    </div>
-                    <p class="text-sm max-w-md">Organización dedicada al fomento del deporte amateur, la integración barrial y la competencia sana en nuestra ciudad.</p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4">Secciones</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#posiciones" class="hover:text-brand-400 transition">Tabla de Posiciones</a></li>
-                        <li><a href="#partidos" class="hover:text-brand-400 transition">Fixture Completo</a></li>
-                        <li><a href="#estadisticas" class="hover:text-brand-400 transition">Estadísticas</a></li>
-                        <li><a href="#noticias" class="hover:text-brand-400 transition">Noticias</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4">Contacto Sede</h4>
-                    <ul id="footer-contacto" class="space-y-2 text-sm"></ul>
-                </div>
-            </div>
-            <div class="border-t border-slate-800 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs">
-                <p id="footer-copy"></p>
-                <div id="footer-redes" class="flex space-x-4 mt-4 sm:mt-0 text-base"></div>
-            </div>
-        </div>
+    <footer class="text-center py-6 text-xs text-slate-500 border-t border-slate-800 mt-12">
+        © 2027 Liga Oficial de Fútbol · Todos los derechos reservados.
     </footer>
 
-    <!-- Modal de Inscripción (envía la solicitud por WhatsApp o mail) -->
-    <div id="inscription-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Pre-inscripción de Club</h3>
-                <button onclick="closeInscriptionModal()" aria-label="Cerrar" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <form id="inscription-form" onsubmit="handleInscription(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Nombre del Equipo / Club</label>
-                    <input name="equipo" type="text" required placeholder="Ej: Club Atlético Huracán" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Categoría</label>
-                    <select name="categoria" id="inscription-cat" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Delegado Responsable</label>
-                    <input name="delegado" type="text" required placeholder="Nombre y Apellido" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Teléfono de Contacto</label>
-                    <input name="telefono" type="tel" required placeholder="Ej: 2352 456789" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                </div>
-                <div class="pt-2 flex justify-end space-x-3">
-                    <button type="button" onclick="closeInscriptionModal()" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Cancelar</button>
-                    <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-sm">Enviar Solicitud</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3.5 rounded-xl shadow-xl flex items-center space-x-3 text-sm font-medium pointer-events-none">
-        <i class="fa-solid fa-circle-check text-brand-500 text-lg"></i>
-        <span id="toast-message"></span>
-    </div>
-
+    <!-- SCRIPT DE CONEXIÓN A GOOGLE SHEETS -->
     <script>
-    // =====================================================================
-    // Datos de ejemplo (se usan solo si SHEET_ID está vacío)
-    // =====================================================================
-    const DEMO = {"Config":[{"nombre_liga":"Liga Deportiva Local","nombre_corto":"LIGA LOCAL","temporada":"2026","jornada_actual":8,"color":"verde","titulo_hero":"Pasión, barrio y","titulo_hero_destacado":"fútbol en estado puro.","subtitulo_hero":"Seguí los resultados, tablas de posiciones, estadísticas y novedades de los clubes de nuestra comunidad.","puestos_liguilla":4,"puestos_repechaje":2,"boletin_titulo":"Boletín Oficial N° 14","boletin_texto":"Ya está disponible el informe semanal del Tribunal de Disciplina y la programación de árbitros para todas las categorías.","boletin_link":"","direccion":"Av. San Martín 450, Sede Social","telefono":"(02352) 42-0000","email":"contacto@ligalocal.org","whatsapp":"","instagram":"","facebook":"","youtube":""}],"Equipos":[{"categoria":"Primera","equipo":"Atlético Norte","color":"azul","descuento_puntos":""},{"categoria":"Primera","equipo":"Deportivo Sur","color":"rojo","descuento_puntos":""},{"categoria":"Primera","equipo":"Sportivo Centro","color":"verde","descuento_puntos":""},{"categoria":"Primera","equipo":"Unión Vecinal","color":"amarillo","descuento_puntos":""},{"categoria":"Primera","equipo":"Ferrocarril Oeste","color":"violeta","descuento_puntos":""},{"categoria":"Primera","equipo":"Defensores del Parque","color":"celeste","descuento_puntos":""},{"categoria":"Primera","equipo":"Juventud Unida","color":"naranja","descuento_puntos":""},{"categoria":"Primera","equipo":"San Martín FC","color":"indigo","descuento_puntos":""},{"categoria":"Sub-23","equipo":"Atlético Norte","color":"azul","descuento_puntos":""},{"categoria":"Sub-23","equipo":"Deportivo Sur","color":"rojo","descuento_puntos":""},{"categoria":"Sub-23","equipo":"Sportivo Centro","color":"verde","descuento_puntos":""},{"categoria":"Sub-23","equipo":"Unión Vecinal","color":"amarillo","descuento_puntos":""},{"categoria":"Sub-23","equipo":"Ferrocarril Oeste","color":"violeta","descuento_puntos":""},{"categoria":"Sub-23","equipo":"Defensores del Parque","color":"celeste","descuento_puntos":""},{"categoria":"Sub-23","equipo":"Juventud Unida","color":"naranja","descuento_puntos":""},{"categoria":"Sub-23","equipo":"San Martín FC","color":"indigo","descuento_puntos":""},{"categoria":"Femenino","equipo":"Las Águilas (Unión)","color":"amarillo","descuento_puntos":""},{"categoria":"Femenino","equipo":"Atlético Norte Fem","color":"azul","descuento_puntos":""},{"categoria":"Femenino","equipo":"Ferrocarril Oeste","color":"violeta","descuento_puntos":""},{"categoria":"Femenino","equipo":"Deportivo Sur","color":"rojo","descuento_puntos":""},{"categoria":"Femenino","equipo":"Juventud Unida","color":"naranja","descuento_puntos":""},{"categoria":"Femenino","equipo":"Sportivo Centro","color":"verde","descuento_puntos":""}],"Partidos":[{"jornada":1,"categoria":"Primera","local":"Atlético Norte","visitante":"Deportivo Sur","goles_local":0,"goles_visitante":1,"fecha":"Dom 04/10","horario":"16:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":1,"categoria":"Primera","local":"San Martín FC","visitante":"Sportivo Centro","goles_local":1,"goles_visitante":1,"fecha":"Dom 04/10","horario":"16:00","cancha":"Cancha San Martín","estado":"","destacado":""},{"jornada":1,"categoria":"Primera","local":"Unión Vecinal","visitante":"Juventud Unida","goles_local":4,"goles_visitante":1,"fecha":"Dom 04/10","horario":"16:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":1,"categoria":"Primera","local":"Defensores del Parque","visitante":"Ferrocarril Oeste","goles_local":0,"goles_visitante":1,"fecha":"Dom 04/10","horario":"16:00","cancha":"Cancha del Parque","estado":"","destacado":""},{"jornada":2,"categoria":"Primera","local":"San Martín FC","visitante":"Atlético Norte","goles_local":1,"goles_visitante":3,"fecha":"Dom 11/10","horario":"16:00","cancha":"Cancha San Martín","estado":"","destacado":""},{"jornada":2,"categoria":"Primera","local":"Deportivo Sur","visitante":"Juventud Unida","goles_local":5,"goles_visitante":0,"fecha":"Dom 11/10","horario":"16:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":2,"categoria":"Primera","local":"Defensores del Parque","visitante":"Sportivo Centro","goles_local":0,"goles_visitante":1,"fecha":"Dom 11/10","horario":"16:00","cancha":"Cancha del Parque","estado":"","destacado":""},{"jornada":2,"categoria":"Primera","local":"Unión Vecinal","visitante":"Ferrocarril Oeste","goles_local":3,"goles_visitante":0,"fecha":"Dom 11/10","horario":"16:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":3,"categoria":"Primera","local":"Atlético Norte","visitante":"Juventud Unida","goles_local":3,"goles_visitante":0,"fecha":"Dom 18/10","horario":"16:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":3,"categoria":"Primera","local":"Defensores del Parque","visitante":"San Martín FC","goles_local":1,"goles_visitante":1,"fecha":"Dom 18/10","horario":"16:00","cancha":"Cancha del Parque","estado":"","destacado":""},{"jornada":3,"categoria":"Primera","local":"Deportivo Sur","visitante":"Ferrocarril Oeste","goles_local":3,"goles_visitante":0,"fecha":"Dom 18/10","horario":"16:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":3,"categoria":"Primera","local":"Unión Vecinal","visitante":"Sportivo Centro","goles_local":2,"goles_visitante":0,"fecha":"Dom 18/10","horario":"16:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":4,"categoria":"Primera","local":"Defensores del Parque","visitante":"Atlético Norte","goles_local":0,"goles_visitante":0,"fecha":"Dom 25/10","horario":"16:00","cancha":"Cancha del Parque","estado":"","destacado":""},{"jornada":4,"categoria":"Primera","local":"Juventud Unida","visitante":"Ferrocarril Oeste","goles_local":0,"goles_visitante":2,"fecha":"Dom 25/10","horario":"16:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":4,"categoria":"Primera","local":"Unión Vecinal","visitante":"San Martín FC","goles_local":2,"goles_visitante":0,"fecha":"Dom 25/10","horario":"16:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":4,"categoria":"Primera","local":"Deportivo Sur","visitante":"Sportivo Centro","goles_local":3,"goles_visitante":3,"fecha":"Dom 25/10","horario":"16:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":5,"categoria":"Primera","local":"Atlético Norte","visitante":"Ferrocarril Oeste","goles_local":3,"goles_visitante":0,"fecha":"Dom 01/11","horario":"16:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":5,"categoria":"Primera","local":"Unión Vecinal","visitante":"Defensores del Parque","goles_local":2,"goles_visitante":0,"fecha":"Dom 01/11","horario":"16:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":5,"categoria":"Primera","local":"Juventud Unida","visitante":"Sportivo Centro","goles_local":0,"goles_visitante":2,"fecha":"Dom 01/11","horario":"16:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":5,"categoria":"Primera","local":"Deportivo Sur","visitante":"San Martín FC","goles_local":3,"goles_visitante":0,"fecha":"Dom 01/11","horario":"16:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":6,"categoria":"Primera","local":"Unión Vecinal","visitante":"Atlético Norte","goles_local":2,"goles_visitante":3,"fecha":"Dom 08/11","horario":"16:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":6,"categoria":"Primera","local":"Ferrocarril Oeste","visitante":"Sportivo Centro","goles_local":1,"goles_visitante":3,"fecha":"Dom 08/11","horario":"16:00","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":6,"categoria":"Primera","local":"Deportivo Sur","visitante":"Defensores del Parque","goles_local":4,"goles_visitante":0,"fecha":"Dom 08/11","horario":"16:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":6,"categoria":"Primera","local":"Juventud Unida","visitante":"San Martín FC","goles_local":1,"goles_visitante":1,"fecha":"Dom 08/11","horario":"16:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":7,"categoria":"Primera","local":"Atlético Norte","visitante":"Sportivo Centro","goles_local":1,"goles_visitante":0,"fecha":"Dom 15/11","horario":"16:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":7,"categoria":"Primera","local":"Deportivo Sur","visitante":"Unión Vecinal","goles_local":2,"goles_visitante":1,"fecha":"Dom 15/11","horario":"16:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":7,"categoria":"Primera","local":"Ferrocarril Oeste","visitante":"San Martín FC","goles_local":5,"goles_visitante":0,"fecha":"Dom 15/11","horario":"16:00","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":7,"categoria":"Primera","local":"Juventud Unida","visitante":"Defensores del Parque","goles_local":3,"goles_visitante":1,"fecha":"Dom 15/11","horario":"16:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":8,"categoria":"Primera","local":"Deportivo Sur","visitante":"Atlético Norte","goles_local":"","goles_visitante":"","fecha":"Dom 22/11","horario":"16:00","cancha":"Cancha Sur","estado":"","destacado":"SI"},{"jornada":8,"categoria":"Primera","local":"Sportivo Centro","visitante":"San Martín FC","goles_local":"","goles_visitante":"","fecha":"Dom 22/11","horario":"16:00","cancha":"Cancha Centro","estado":"","destacado":""},{"jornada":8,"categoria":"Primera","local":"Juventud Unida","visitante":"Unión Vecinal","goles_local":"","goles_visitante":"","fecha":"Dom 22/11","horario":"16:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":8,"categoria":"Primera","local":"Ferrocarril Oeste","visitante":"Defensores del Parque","goles_local":"","goles_visitante":"","fecha":"Dom 22/11","horario":"16:00","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":9,"categoria":"Primera","local":"Atlético Norte","visitante":"San Martín FC","goles_local":"","goles_visitante":"","fecha":"Dom 29/11","horario":"16:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":9,"categoria":"Primera","local":"Juventud Unida","visitante":"Deportivo Sur","goles_local":"","goles_visitante":"","fecha":"Dom 29/11","horario":"16:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":9,"categoria":"Primera","local":"Sportivo Centro","visitante":"Defensores del Parque","goles_local":"","goles_visitante":"","fecha":"Dom 29/11","horario":"16:00","cancha":"Cancha Centro","estado":"","destacado":""},{"jornada":9,"categoria":"Primera","local":"Ferrocarril Oeste","visitante":"Unión Vecinal","goles_local":"","goles_visitante":"","fecha":"Dom 29/11","horario":"16:00","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":1,"categoria":"Sub-23","local":"Atlético Norte","visitante":"Deportivo Sur","goles_local":1,"goles_visitante":2,"fecha":"Dom 04/10","horario":"14:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":1,"categoria":"Sub-23","local":"San Martín FC","visitante":"Sportivo Centro","goles_local":0,"goles_visitante":4,"fecha":"Dom 04/10","horario":"14:00","cancha":"Cancha San Martín","estado":"","destacado":""},{"jornada":1,"categoria":"Sub-23","local":"Unión Vecinal","visitante":"Juventud Unida","goles_local":3,"goles_visitante":0,"fecha":"Dom 04/10","horario":"14:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":1,"categoria":"Sub-23","local":"Defensores del Parque","visitante":"Ferrocarril Oeste","goles_local":0,"goles_visitante":1,"fecha":"Dom 04/10","horario":"14:00","cancha":"Cancha del Parque","estado":"","destacado":""},{"jornada":2,"categoria":"Sub-23","local":"San Martín FC","visitante":"Atlético Norte","goles_local":0,"goles_visitante":2,"fecha":"Dom 11/10","horario":"14:00","cancha":"Cancha San Martín","estado":"","destacado":""},{"jornada":2,"categoria":"Sub-23","local":"Deportivo Sur","visitante":"Juventud Unida","goles_local":2,"goles_visitante":0,"fecha":"Dom 11/10","horario":"14:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":2,"categoria":"Sub-23","local":"Defensores del Parque","visitante":"Sportivo Centro","goles_local":0,"goles_visitante":3,"fecha":"Dom 11/10","horario":"14:00","cancha":"Cancha del Parque","estado":"","destacado":""},{"jornada":2,"categoria":"Sub-23","local":"Unión Vecinal","visitante":"Ferrocarril Oeste","goles_local":2,"goles_visitante":1,"fecha":"Dom 11/10","horario":"14:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":3,"categoria":"Sub-23","local":"Atlético Norte","visitante":"Juventud Unida","goles_local":0,"goles_visitante":0,"fecha":"Dom 18/10","horario":"14:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":3,"categoria":"Sub-23","local":"Defensores del Parque","visitante":"San Martín FC","goles_local":0,"goles_visitante":1,"fecha":"Dom 18/10","horario":"14:00","cancha":"Cancha del Parque","estado":"","destacado":""},{"jornada":3,"categoria":"Sub-23","local":"Deportivo Sur","visitante":"Ferrocarril Oeste","goles_local":3,"goles_visitante":0,"fecha":"Dom 18/10","horario":"14:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":3,"categoria":"Sub-23","local":"Unión Vecinal","visitante":"Sportivo Centro","goles_local":2,"goles_visitante":2,"fecha":"Dom 18/10","horario":"14:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":4,"categoria":"Sub-23","local":"Defensores del Parque","visitante":"Atlético Norte","goles_local":1,"goles_visitante":2,"fecha":"Dom 25/10","horario":"14:00","cancha":"Cancha del Parque","estado":"","destacado":""},{"jornada":4,"categoria":"Sub-23","local":"Juventud Unida","visitante":"Ferrocarril Oeste","goles_local":1,"goles_visitante":1,"fecha":"Dom 25/10","horario":"14:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":4,"categoria":"Sub-23","local":"Unión Vecinal","visitante":"San Martín FC","goles_local":1,"goles_visitante":1,"fecha":"Dom 25/10","horario":"14:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":4,"categoria":"Sub-23","local":"Deportivo Sur","visitante":"Sportivo Centro","goles_local":1,"goles_visitante":1,"fecha":"Dom 25/10","horario":"14:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":5,"categoria":"Sub-23","local":"Atlético Norte","visitante":"Ferrocarril Oeste","goles_local":4,"goles_visitante":2,"fecha":"Dom 01/11","horario":"14:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":5,"categoria":"Sub-23","local":"Unión Vecinal","visitante":"Defensores del Parque","goles_local":5,"goles_visitante":0,"fecha":"Dom 01/11","horario":"14:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":5,"categoria":"Sub-23","local":"Juventud Unida","visitante":"Sportivo Centro","goles_local":0,"goles_visitante":2,"fecha":"Dom 01/11","horario":"14:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":5,"categoria":"Sub-23","local":"Deportivo Sur","visitante":"San Martín FC","goles_local":3,"goles_visitante":0,"fecha":"Dom 01/11","horario":"14:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":6,"categoria":"Sub-23","local":"Unión Vecinal","visitante":"Atlético Norte","goles_local":0,"goles_visitante":1,"fecha":"Dom 08/11","horario":"14:00","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":6,"categoria":"Sub-23","local":"Ferrocarril Oeste","visitante":"Sportivo Centro","goles_local":0,"goles_visitante":1,"fecha":"Dom 08/11","horario":"14:00","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":6,"categoria":"Sub-23","local":"Deportivo Sur","visitante":"Defensores del Parque","goles_local":3,"goles_visitante":1,"fecha":"Dom 08/11","horario":"14:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":6,"categoria":"Sub-23","local":"Juventud Unida","visitante":"San Martín FC","goles_local":0,"goles_visitante":1,"fecha":"Dom 08/11","horario":"14:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":7,"categoria":"Sub-23","local":"Atlético Norte","visitante":"Sportivo Centro","goles_local":1,"goles_visitante":0,"fecha":"Dom 15/11","horario":"14:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":7,"categoria":"Sub-23","local":"Deportivo Sur","visitante":"Unión Vecinal","goles_local":3,"goles_visitante":0,"fecha":"Dom 15/11","horario":"14:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":7,"categoria":"Sub-23","local":"Ferrocarril Oeste","visitante":"San Martín FC","goles_local":0,"goles_visitante":0,"fecha":"Dom 15/11","horario":"14:00","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":7,"categoria":"Sub-23","local":"Juventud Unida","visitante":"Defensores del Parque","goles_local":0,"goles_visitante":3,"fecha":"Dom 15/11","horario":"14:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":8,"categoria":"Sub-23","local":"Deportivo Sur","visitante":"Atlético Norte","goles_local":"","goles_visitante":"","fecha":"Dom 22/11","horario":"14:00","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":8,"categoria":"Sub-23","local":"Sportivo Centro","visitante":"San Martín FC","goles_local":"","goles_visitante":"","fecha":"Dom 22/11","horario":"14:00","cancha":"Cancha Centro","estado":"","destacado":""},{"jornada":8,"categoria":"Sub-23","local":"Juventud Unida","visitante":"Unión Vecinal","goles_local":"","goles_visitante":"","fecha":"Dom 22/11","horario":"14:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":8,"categoria":"Sub-23","local":"Ferrocarril Oeste","visitante":"Defensores del Parque","goles_local":"","goles_visitante":"","fecha":"Dom 22/11","horario":"14:00","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":9,"categoria":"Sub-23","local":"Atlético Norte","visitante":"San Martín FC","goles_local":"","goles_visitante":"","fecha":"Dom 29/11","horario":"14:00","cancha":"Estadio Municipal","estado":"","destacado":""},{"jornada":9,"categoria":"Sub-23","local":"Juventud Unida","visitante":"Deportivo Sur","goles_local":"","goles_visitante":"","fecha":"Dom 29/11","horario":"14:00","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":9,"categoria":"Sub-23","local":"Sportivo Centro","visitante":"Defensores del Parque","goles_local":"","goles_visitante":"","fecha":"Dom 29/11","horario":"14:00","cancha":"Cancha Centro","estado":"","destacado":""},{"jornada":9,"categoria":"Sub-23","local":"Ferrocarril Oeste","visitante":"Unión Vecinal","goles_local":"","goles_visitante":"","fecha":"Dom 29/11","horario":"14:00","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":1,"categoria":"Femenino","local":"Las Águilas (Unión)","visitante":"Deportivo Sur","goles_local":5,"goles_visitante":0,"fecha":"Sáb 03/10","horario":"16:30","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":1,"categoria":"Femenino","local":"Sportivo Centro","visitante":"Atlético Norte Fem","goles_local":0,"goles_visitante":6,"fecha":"Sáb 03/10","horario":"16:30","cancha":"Cancha Centro","estado":"","destacado":""},{"jornada":1,"categoria":"Femenino","local":"Ferrocarril Oeste","visitante":"Juventud Unida","goles_local":3,"goles_visitante":0,"fecha":"Sáb 03/10","horario":"16:30","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":2,"categoria":"Femenino","local":"Sportivo Centro","visitante":"Las Águilas (Unión)","goles_local":1,"goles_visitante":2,"fecha":"Sáb 10/10","horario":"16:30","cancha":"Cancha Centro","estado":"","destacado":""},{"jornada":2,"categoria":"Femenino","local":"Deportivo Sur","visitante":"Juventud Unida","goles_local":3,"goles_visitante":0,"fecha":"Sáb 10/10","horario":"16:30","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":2,"categoria":"Femenino","local":"Ferrocarril Oeste","visitante":"Atlético Norte Fem","goles_local":2,"goles_visitante":1,"fecha":"Sáb 10/10","horario":"16:30","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":3,"categoria":"Femenino","local":"Las Águilas (Unión)","visitante":"Juventud Unida","goles_local":1,"goles_visitante":0,"fecha":"Sáb 17/10","horario":"16:30","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":3,"categoria":"Femenino","local":"Ferrocarril Oeste","visitante":"Sportivo Centro","goles_local":1,"goles_visitante":1,"fecha":"Sáb 17/10","horario":"16:30","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":3,"categoria":"Femenino","local":"Deportivo Sur","visitante":"Atlético Norte Fem","goles_local":1,"goles_visitante":1,"fecha":"Sáb 17/10","horario":"16:30","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":4,"categoria":"Femenino","local":"Ferrocarril Oeste","visitante":"Las Águilas (Unión)","goles_local":0,"goles_visitante":4,"fecha":"Sáb 24/10","horario":"16:30","cancha":"Cancha Ferro","estado":"","destacado":""},{"jornada":4,"categoria":"Femenino","local":"Juventud Unida","visitante":"Atlético Norte Fem","goles_local":0,"goles_visitante":0,"fecha":"Sáb 24/10","horario":"16:30","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":4,"categoria":"Femenino","local":"Deportivo Sur","visitante":"Sportivo Centro","goles_local":0,"goles_visitante":0,"fecha":"Sáb 24/10","horario":"16:30","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":5,"categoria":"Femenino","local":"Las Águilas (Unión)","visitante":"Atlético Norte Fem","goles_local":1,"goles_visitante":0,"fecha":"Sáb 31/10","horario":"16:30","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":5,"categoria":"Femenino","local":"Deportivo Sur","visitante":"Ferrocarril Oeste","goles_local":3,"goles_visitante":3,"fecha":"Sáb 31/10","horario":"16:30","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":5,"categoria":"Femenino","local":"Juventud Unida","visitante":"Sportivo Centro","goles_local":2,"goles_visitante":1,"fecha":"Sáb 31/10","horario":"16:30","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":6,"categoria":"Femenino","local":"Deportivo Sur","visitante":"Las Águilas (Unión)","goles_local":3,"goles_visitante":6,"fecha":"Sáb 07/11","horario":"16:30","cancha":"Cancha Sur","estado":"","destacado":""},{"jornada":6,"categoria":"Femenino","local":"Atlético Norte Fem","visitante":"Sportivo Centro","goles_local":2,"goles_visitante":0,"fecha":"Sáb 07/11","horario":"16:30","cancha":"Cancha Norte","estado":"","destacado":""},{"jornada":6,"categoria":"Femenino","local":"Juventud Unida","visitante":"Ferrocarril Oeste","goles_local":2,"goles_visitante":2,"fecha":"Sáb 07/11","horario":"16:30","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":7,"categoria":"Femenino","local":"Las Águilas (Unión)","visitante":"Sportivo Centro","goles_local":2,"goles_visitante":1,"fecha":"Sáb 14/11","horario":"16:30","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":7,"categoria":"Femenino","local":"Juventud Unida","visitante":"Deportivo Sur","goles_local":4,"goles_visitante":1,"fecha":"Sáb 14/11","horario":"16:30","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":7,"categoria":"Femenino","local":"Atlético Norte Fem","visitante":"Ferrocarril Oeste","goles_local":0,"goles_visitante":2,"fecha":"Sáb 14/11","horario":"16:30","cancha":"Cancha Norte","estado":"","destacado":""},{"jornada":8,"categoria":"Femenino","local":"Juventud Unida","visitante":"Las Águilas (Unión)","goles_local":"","goles_visitante":"","fecha":"Sáb 21/11","horario":"16:30","cancha":"Cancha Juventud","estado":"","destacado":""},{"jornada":8,"categoria":"Femenino","local":"Sportivo Centro","visitante":"Ferrocarril Oeste","goles_local":"","goles_visitante":"","fecha":"Sáb 21/11","horario":"16:30","cancha":"Cancha Centro","estado":"","destacado":""},{"jornada":8,"categoria":"Femenino","local":"Atlético Norte Fem","visitante":"Deportivo Sur","goles_local":"","goles_visitante":"","fecha":"Sáb 21/11","horario":"16:30","cancha":"Cancha Norte","estado":"","destacado":""},{"jornada":9,"categoria":"Femenino","local":"Las Águilas (Unión)","visitante":"Ferrocarril Oeste","goles_local":"","goles_visitante":"","fecha":"Sáb 28/11","horario":"16:30","cancha":"Polideportivo","estado":"","destacado":""},{"jornada":9,"categoria":"Femenino","local":"Atlético Norte Fem","visitante":"Juventud Unida","goles_local":"","goles_visitante":"","fecha":"Sáb 28/11","horario":"16:30","cancha":"Cancha Norte","estado":"","destacado":""},{"jornada":9,"categoria":"Femenino","local":"Sportivo Centro","visitante":"Deportivo Sur","goles_local":"","goles_visitante":"","fecha":"Sáb 28/11","horario":"16:30","cancha":"Cancha Centro","estado":"","destacado":""}],"Goleadores":[{"jugador":"Facundo Morales","equipo":"Atlético Norte","categoria":"Primera","goles":8,"pj":7},{"jugador":"Camila Rodríguez","equipo":"Las Águilas (Unión)","categoria":"Femenino","goles":11,"pj":7},{"jugador":"Santiago Pereyra","equipo":"Deportivo Sur","categoria":"Primera","goles":6,"pj":7},{"jugador":"Tomás Villalba","equipo":"Sportivo Centro","categoria":"Sub-23","goles":7,"pj":7},{"jugador":"Julieta Sosa","equipo":"Atlético Norte Fem","categoria":"Femenino","goles":6,"pj":6},{"jugador":"Bruno Acosta","equipo":"Sportivo Centro","categoria":"Primera","goles":5,"pj":7}],"Vallas":[{"arquero":"Martín Herrera","equipo":"Atlético Norte","categoria":"Primera","goles_recibidos":4,"pj":7},{"arquero":"Lucas Gómez","equipo":"Deportivo Sur","categoria":"Primera","goles_recibidos":6,"pj":7},{"arquero":"Agustina Paz","equipo":"Las Águilas (Unión)","categoria":"Femenino","goles_recibidos":3,"pj":7}],"Federales":[{"club":"Club Atlético Norte","color":"azul","torneo":"Torneo Regional Amateur • Zona 4","situacion":"1° en su zona (10 pts)","fase":"Fase de grupos (Fecha 5)","proximo_local":"Atlético Norte","proximo_visitante":"Social Junín","horario":"Dom 17:00 hs","lugar":"Estadio Municipal","condicion":"Local"},{"club":"Club Deportivo Sur","color":"rojo","torneo":"Torneo Regional Amateur • Zona 5","situacion":"2° en su zona (7 pts)","fase":"Fase de grupos (Fecha 5)","proximo_local":"Independiente Chivilcoy","proximo_visitante":"Deportivo Sur","horario":"Sáb 16:30 hs","lugar":"Estadio Raúl Lungarzo","condicion":"Visitante"}],"Noticias":[{"fecha":"17/11/2026","seccion":"Primera División","titulo":"Todo listo para el duelo de punteros este domingo","resumen":"Atlético Norte y Deportivo Sur se enfrentan en Cancha Sur con operativo especial de seguridad y gran expectativa en las tribunas.","imagen":"","link":""},{"fecha":"16/11/2026","seccion":"Infraestructura","titulo":"Inauguran iluminación LED en dos canchas auxiliares","resumen":"Gracias al aporte municipal y al esfuerzo de las comisiones directivas, se podrán jugar partidos nocturnos los viernes.","imagen":"","link":""},{"fecha":"14/11/2026","seccion":"Formativas","titulo":"Abierta la inscripción para el Torneo Infantil de Primavera","resumen":"Las categorías 2014 a 2018 tendrán su certamen recreativo y formativo durante los próximos meses.","imagen":"","link":""}]};
-
-    const HOJAS = ['Config', 'Equipos', 'Partidos', 'Goleadores', 'Vallas', 'Federales', 'Noticias'];
-
-    // Columnas mínimas de cada pestaña (sirve para avisar si alguien cambió un título)
-    const COLUMNAS = {
-        Equipos: ['categoria', 'equipo'],
-        Partidos: ['jornada', 'categoria', 'local', 'visitante', 'goles_local', 'goles_visitante'],
-        Goleadores: ['jugador', 'goles'],
-        Vallas: ['arquero', 'goles_recibidos', 'pj'],
-        Federales: ['club'],
-        Noticias: ['titulo'],
-        Config: ['nombre_liga']
-    };
-
-    const COLORES_EQUIPO = {
-        azul: '#3b82f6', rojo: '#ef4444', verde: '#10b981', amarillo: '#f59e0b', dorado: '#f59e0b',
-        violeta: '#a855f7', celeste: '#06b6d4', naranja: '#f97316', indigo: '#6366f1', rosa: '#ec4899',
-        bordo: '#9f1239', negro: '#334155', gris: '#64748b', blanco: '#cbd5e1', marron: '#92400e'
-    };
-
-    const PALETAS = {
-        verde:   { 50: '#f0fdf4', 100: '#dcfce7', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 900: '#14532d' },
-        azul:    { 50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
-        rojo:    { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337' },
-        dorado:  { 50: '#fffbeb', 100: '#fef3c7', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309', 900: '#78350f' },
-        violeta: { 50: '#faf5ff', 100: '#f3e8ff', 400: '#c084fc', 500: '#a855f7', 600: '#9333ea', 700: '#7e22ce', 900: '#581c87' }
-    };
-    PALETAS.amarillo = PALETAS.naranja = PALETAS.dorado;
-
-    const COLORES_CATEGORIA = [
-        'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
-        'bg-blue-500/15 text-blue-600 dark:text-blue-400',
-        'bg-purple-500/15 text-purple-600 dark:text-purple-400',
-        'bg-amber-500/15 text-amber-600 dark:text-amber-400',
-        'bg-rose-500/15 text-rose-600 dark:text-rose-400',
-        'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400'
-    ];
-
-    // =====================================================================
-    // Utilidades
-    // =====================================================================
-    const $ = id => document.getElementById(id);
-
-    function esc(v) {
-        return String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    }
-    function txt(v) { return String(v ?? '').trim(); }
-    function num(v) {
-        const s = txt(v).replace(',', '.');
-        if (s === '') return null;
-        const n = Number(s);
-        return Number.isFinite(n) ? n : null;
-    }
-    function siNo(v) { return ['si', 'sí', 'x', '1', 'true', 'verdadero'].includes(txt(v).toLowerCase()); }
-    function normalizar(s) {
-        return txt(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
-    }
-    function hora(v) { return txt(v).replace(/^(\d{1,2}:\d{2}):00$/, '$1'); }
-    function colorEquipo(nombre) {
-        const c = txt(nombre).toLowerCase();
-        if (/^#[0-9a-f]{3,8}$/i.test(c)) return c;
-        return COLORES_EQUIPO[normalizar(c)] || '#94a3b8';
-    }
-    function linkSeguro(url) {
-        const u = txt(url);
-        return /^https?:\/\//i.test(u) ? u : '';
-    }
-
-    // Lector de CSV (soporta comillas, comas y saltos de línea dentro de celdas)
-    function parseCSV(texto) {
-        const filas = [];
-        let fila = [], celda = '', comillas = false;
-        for (let i = 0; i < texto.length; i++) {
-            const c = texto[i];
-            if (comillas) {
-                if (c === '"') {
-                    if (texto[i + 1] === '"') { celda += '"'; i++; }
-                    else comillas = false;
-                } else celda += c;
-            } else if (c === '"') comillas = true;
-            else if (c === ',') { fila.push(celda); celda = ''; }
-            else if (c === '\n' || c === '\r') {
-                if (c === '\r' && texto[i + 1] === '\n') i++;
-                fila.push(celda); filas.push(fila); fila = []; celda = '';
-            } else celda += c;
-        }
-        if (celda !== '' || fila.length) { fila.push(celda); filas.push(fila); }
-        if (!filas.length) return [];
-        const titulos = filas[0].map(normalizar);
-        return filas.slice(1)
-            .filter(f => f.some(v => txt(v) !== ''))
-            .map(f => Object.fromEntries(titulos.map((t, i) => [t, f[i] ?? ''])));
-    }
-
-    // =====================================================================
-    // Carga de datos
-    // =====================================================================
-    async function leerHoja(nombre) {
-        const url = `https://docs.google.com/spreadsheets/d/${encodeURIComponent(SHEET_ID)}/gviz/tq?tqx=out:csv&headers=1&sheet=${encodeURIComponent(nombre)}&_=${Date.now()}`;
-        const r = await fetch(url);
-        if (!r.ok) throw new Error(`No se pudo leer la pestaña ${nombre}`);
-        const texto = await r.text();
-        if (texto.trim().startsWith('<')) throw new Error('La planilla no es pública');
-        const filas = parseCSV(texto);
-        const faltan = (COLUMNAS[nombre] || []).filter(c => filas.length && !(c in filas[0]));
-        if (faltan.length) {
-            console.warn(`Pestaña "${nombre}": faltan columnas ${faltan.join(', ')}. ¿Se cambió el nombre de la pestaña o de algún título?`);
-            avisos.push(`En la pestaña <b>${esc(nombre)}</b> faltan las columnas: ${esc(faltan.join(', '))}.`);
-            return [];
-        }
-        return filas;
-    }
-
-    const avisos = [];
-    let DATA = null;
-
-    async function cargarDatos() {
-        if (!SHEET_ID) return { datos: structuredClone(DEMO), demo: true };
-        const resultados = await Promise.all(HOJAS.map(h => leerHoja(h).catch(e => { avisos.push(esc(e.message)); return []; })));
-        return { datos: Object.fromEntries(HOJAS.map((h, i) => [h, resultados[i]])), demo: false };
-    }
-
-    function prepararModelo(datos) {
-        const cfg = (datos.Config || [])[0] || {};
-        const equipos = (datos.Equipos || []).filter(e => txt(e.equipo) && txt(e.categoria));
-        const partidos = (datos.Partidos || [])
-            .filter(p => num(p.jornada) !== null && txt(p.local) && txt(p.visitante))
-            .map(p => {
-                const gl = num(p.goles_local), gv = num(p.goles_visitante);
-                return {
-                    jornada: num(p.jornada), cat: txt(p.categoria), local: txt(p.local), visitante: txt(p.visitante),
-                    gl, gv, jugado: gl !== null && gv !== null,
-                    fecha: txt(p.fecha), horario: hora(p.horario), cancha: txt(p.cancha),
-                    estado: txt(p.estado), destacado: siNo(p.destacado)
-                };
-            });
-
-        const categorias = [];
-        [...equipos.map(e => txt(e.categoria)), ...partidos.map(p => p.cat)].forEach(c => {
-            if (c && !categorias.includes(c)) categorias.push(c);
-        });
-
-        const colores = {};
-        equipos.forEach(e => {
-            const col = colorEquipo(e.color);
-            colores[`${txt(e.categoria)}|${txt(e.equipo)}`] = col;
-            if (!colores[txt(e.equipo)]) colores[txt(e.equipo)] = col;
-        });
-
-        const jornadas = [...new Set(partidos.map(p => p.jornada))].sort((a, b) => a - b);
-        return { cfg, equipos, partidos, categorias, colores, jornadas };
-    }
-
-    function colorDe(equipo, cat) {
-        return DATA.colores[`${cat}|${equipo}`] || DATA.colores[equipo] || '#94a3b8';
-    }
-
-    // Calcula la tabla a partir de los resultados cargados en "Partidos"
-    function calcularTabla(cat) {
-        const tabla = {};
-        const alta = (nombre, descuento = 0) => {
-            if (!tabla[nombre]) tabla[nombre] = { name: nombre, pts: 0, pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, descuento: 0, form: [] };
-            tabla[nombre].descuento += descuento;
+        // PEGA AQUÍ LOS 3 ENLACES CSV DE CADA PESTAÑA DE TU GOOGLE SHEETS
+        const URLS_CATEGORIAS = {
+            primera: {
+                nombre: "Primera División",
+                csv: "PEGAR_ENLACE_CSV_PRIMERA_AQUÍ"
+            },
+            sub23: {
+                nombre: "Sub-23",
+                csv: "PEGAR_ENLACE_CSV_SUB23_AQUÍ"
+            },
+            femenino: {
+                nombre: "Femenino",
+                csv: "PEGAR_ENLACE_CSV_FEMENINO_AQUÍ"
+            }
         };
-        DATA.equipos.filter(e => txt(e.categoria) === cat).forEach(e => alta(txt(e.equipo), num(e.descuento_puntos) || 0));
 
-        DATA.partidos.filter(p => p.cat === cat && p.jugado)
-            .sort((a, b) => a.jornada - b.jornada)
-            .forEach(p => {
-                alta(p.local); alta(p.visitante);
-                const L = tabla[p.local], V = tabla[p.visitante];
-                L.pj++; V.pj++;
-                L.gf += p.gl; L.gc += p.gv; V.gf += p.gv; V.gc += p.gl;
-                if (p.gl > p.gv) { L.pg++; V.pp++; L.form.push('G'); V.form.push('P'); }
-                else if (p.gl < p.gv) { V.pg++; L.pp++; V.form.push('G'); L.form.push('P'); }
-                else { L.pe++; V.pe++; L.form.push('E'); V.form.push('E'); }
+        async function cambiarCategoria(categoriaKey) {
+            const info = URLS_CATEGORIAS[categoriaKey];
+            document.getElementById("titulo-categoria").textContent = info.nombre;
+
+            // Actualizar estilos de botones
+            document.querySelectorAll(".cat-btn").forEach(btn => {
+                btn.className = "cat-btn px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wide transition bg-slate-800 text-slate-300 hover:bg-slate-700";
             });
+            document.getElementById(`btn-${categoriaKey}`).className = "cat-btn px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wide transition bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20";
 
-        return Object.values(tabla)
-            .map(t => ({ ...t, pts: t.pg * 3 + t.pe - t.descuento, dg: t.gf - t.gc, form: t.form.slice(-5) }))
-            .sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf || a.name.localeCompare(b.name, 'es'))
-            .map((t, i) => ({ ...t, pos: i + 1 }));
-    }
+            const tbody = document.querySelector("#tabla-posiciones tbody");
+            
+            if (info.csv.includes("PEGAR_ENLACE")) {
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-slate-400">Falta pegar el enlace CSV de <strong>${info.nombre}</strong> en el código.</td></tr>`;
+                return;
+            }
 
-    // =====================================================================
-    // Render
-    // =====================================================================
-    let categoriaActual = null;
-    let indiceJornada = 0;
+            tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-slate-400">Cargando posiciones de ${info.nombre}...</td></tr>`;
 
-    function aplicarConfig() {
-        const c = DATA.cfg;
-        const nombre = txt(c.nombre_liga) || 'Liga Deportiva Local';
-        const temporada = txt(c.temporada);
-        document.title = temporada ? `${nombre} - Temporada ${temporada}` : nombre;
-        $('nav-nombre').textContent = txt(c.nombre_corto) || nombre.toUpperCase();
-        $('nav-temporada').textContent = temporada ? `Temporada ${temporada}` : '';
-        $('footer-nombre').textContent = nombre;
-        $('footer-copy').textContent = `© ${new Date().getFullYear()} ${nombre}.`;
-        $('hero-titulo').textContent = txt(c.titulo_hero) || nombre;
-        $('hero-titulo-dest').textContent = txt(c.titulo_hero_destacado);
-        $('hero-subtitulo').textContent = txt(c.subtitulo_hero);
+            try {
+                const respuesta = await fetch(info.csv);
+                const datosTexto = await respuesta.text();
+                const filas = datosTexto.split("\n").map(fila => fila.split(","));
+                tbody.innerHTML = "";
 
-        const paleta = PALETAS[normalizar(c.color)] || PALETAS.verde;
-        Object.entries(paleta).forEach(([k, v]) => document.documentElement.style.setProperty(`--brand-${k}`, v));
+                for (let i = 1; i < filas.length; i++) {
+                    const col = filas[i];
+                    if (col.length >= 11 && col[2].trim() !== "") {
+                        const [pos, escudo, equipo, pts, pj, pg, pe, pp, gf, gc, dg] = col;
+                        const imgTag = escudo.trim() 
+                            ? `<img src="${escudo.trim()}" alt="" class="w-6 h-6 object-contain rounded-full bg-slate-700/50" onerror="this.style.display='none'">` 
+                            : "";
 
-        // Contacto
-        const contacto = [
-            ['fa-location-dot', txt(c.direccion), ''],
-            ['fa-phone', txt(c.telefono), txt(c.telefono) ? `tel:${txt(c.telefono).replace(/[^\d+]/g, '')}` : ''],
-            ['fa-envelope', txt(c.email), txt(c.email) ? `mailto:${txt(c.email)}` : '']
-        ].filter(x => x[1]);
-        $('footer-contacto').innerHTML = contacto.map(([ico, t, href]) =>
-            `<li><i class="fa-solid ${ico} mr-2 text-brand-500"></i>${href ? `<a href="${esc(href)}" class="hover:text-white">${esc(t)}</a>` : esc(t)}</li>`).join('');
-
-        const redes = [['instagram', 'fa-instagram'], ['facebook', 'fa-facebook'], ['youtube', 'fa-youtube']]
-            .filter(([k]) => linkSeguro(c[k]));
-        $('footer-redes').innerHTML = redes.map(([k, ico]) =>
-            `<a href="${esc(linkSeguro(c[k]))}" target="_blank" rel="noopener" aria-label="${k}" class="hover:text-white transition"><i class="fa-brands ${ico}"></i></a>`).join('');
-
-        // Boletín
-        if (txt(c.boletin_titulo)) {
-            $('boletin').classList.remove('hidden');
-            $('boletin-titulo').textContent = txt(c.boletin_titulo);
-            $('boletin-texto').textContent = txt(c.boletin_texto);
-            const link = linkSeguro(c.boletin_link);
-            if (link) { $('boletin-link').href = link; $('boletin-link').classList.remove('hidden'); $('boletin-link').style.display = 'inline-flex'; }
+                        const tr = document.createElement("tr");
+                        tr.className = "hover:bg-slate-700/30 transition";
+                        tr.innerHTML = `
+                            <td class="py-3 px-3 font-bold text-emerald-400">${pos.trim()}</td>
+                            <td class="py-3 px-3 font-medium text-white flex items-center gap-2.5">
+                                ${imgTag}
+                                <span>${equipo.trim()}</span>
+                            </td>
+                            <td class="py-3 px-2 text-center font-bold text-white bg-slate-700/20">${pts.trim()}</td>
+                            <td class="py-3 px-2 text-center text-slate-300">${pj.trim()}</td>
+                            <td class="py-3 px-2 text-center text-slate-300">${pg.trim()}</td>
+                            <td class="py-3 px-2 text-center text-slate-300">${pe.trim()}</td>
+                            <td class="py-3 px-2 text-center text-slate-300">${pp.trim()}</td>
+                            <td class="py-3 px-2 text-center text-slate-300">${gf.trim()}</td>
+                            <td class="py-3 px-2 text-center text-slate-300">${gc.trim()}</td>
+                            <td class="py-3 px-2 text-center text-slate-300">${dg.trim()}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+                }
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-red-400">Error al cargar los datos. Verificá que la pestaña esté publicada como CSV.</td></tr>`;
+            }
         }
 
-        // Inscripción: solo si hay WhatsApp o mail para recibirla
-        const puedeInscribir = txt(c.whatsapp) || txt(c.email);
-        document.querySelectorAll('.btn-inscribir').forEach(b => b.classList.toggle('!hidden', !puedeInscribir));
-        $('inscription-cat').innerHTML = DATA.categorias.map(cat => `<option>${esc(cat)}</option>`).join('');
-    }
-
-    function renderHero() {
-        const jActual = num(DATA.cfg.jornada_actual) ?? DATA.jornadas[indiceJornada];
-        $('hero-badge-text').textContent = jActual ? `Jornada ${jActual}` : 'Temporada en curso';
-
-        const deLaJornada = DATA.partidos.filter(p => p.jornada === jActual);
-        const m = deLaJornada.find(p => p.destacado) || deLaJornada.find(p => !p.jugado) || deLaJornada[0];
-        if (!m) { $('hero-partido').innerHTML = ''; return; }
-
-        const tabla = calcularTabla(m.cat);
-        const pos = n => { const t = tabla.find(x => x.name === n); return t && t.pj ? `${t.pos}° puesto` : ''; };
-        const escudo = n => `<div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl mb-3" style="color:${colorDe(n, m.cat)}"><i class="fa-solid fa-shield-halved"></i></div>`;
-        const centro = m.jugado
-            ? `<span class="text-3xl font-black">${m.gl} - ${m.gv}</span><span class="text-xs text-slate-400 mt-2">Final</span>`
-            : `<span class="text-2xl sm:text-3xl font-black text-slate-500">VS</span>`;
-        const cuando = [m.estado || [m.fecha, m.horario && `${m.horario} hs`].filter(Boolean).join(' · ')].filter(Boolean)[0] || '';
-
-        $('hero-partido').innerHTML = `
-            <div class="bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-2xl p-6 shadow-2xl">
-                <div class="flex justify-between items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
-                    <span><i class="fa-solid fa-fire text-orange-500 mr-1"></i> Partido de la Fecha · ${esc(m.cat)}</span>
-                    ${cuando ? `<span class="bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg normal-case whitespace-nowrap">${esc(cuando)}</span>` : ''}
-                </div>
-                <div class="flex items-center justify-between my-6">
-                    <div class="flex flex-col items-center w-1/3 text-center">${escudo(m.local)}
-                        <span class="font-bold text-base sm:text-lg leading-tight">${esc(m.local)}</span>
-                        <span class="text-xs text-slate-400 mt-1">${esc(pos(m.local))}</span></div>
-                    <div class="flex flex-col items-center w-1/3">${centro}</div>
-                    <div class="flex flex-col items-center w-1/3 text-center">${escudo(m.visitante)}
-                        <span class="font-bold text-base sm:text-lg leading-tight">${esc(m.visitante)}</span>
-                        <span class="text-xs text-slate-400 mt-1">${esc(pos(m.visitante))}</span></div>
-                </div>
-                ${m.cancha ? `<div class="border-t border-slate-700/80 pt-4 text-xs text-slate-400"><i class="fa-solid fa-location-dot mr-1 text-slate-500"></i> ${esc(m.cancha)}</div>` : ''}
-            </div>`;
-    }
-
-    function renderCategoryButtons() {
-        $('cat-buttons').innerHTML = DATA.categorias.map(c =>
-            `<button data-cat="${esc(c)}" class="cat-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition">${esc(c)}</button>`).join('');
-        document.querySelectorAll('.cat-btn').forEach(b => b.addEventListener('click', () => switchCategory(b.dataset.cat)));
-
-        $('match-category-filter').innerHTML = '<option value="todas">Todas las categorías</option>' +
-            DATA.categorias.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
-    }
-
-    function switchCategory(cat) {
-        categoriaActual = cat;
-        document.querySelectorAll('.cat-btn').forEach(b => {
-            const activo = b.dataset.cat === cat;
-            b.classList.toggle('bg-white', activo); b.classList.toggle('dark:bg-slate-700', activo);
-            b.classList.toggle('text-slate-900', activo); b.classList.toggle('dark:text-white', activo);
-            b.classList.toggle('shadow-sm', activo);
-            b.classList.toggle('text-slate-600', !activo); b.classList.toggle('dark:text-slate-400', !activo);
-        });
-        renderStandings();
-    }
-
-    function renderStandings() {
-        const tbody = $('standings-body');
-        const cat = categoriaActual;
-        $('standings-subtitle').textContent = cat ? `Clasificación oficial · ${cat}` : 'Clasificación oficial';
-        const liguilla = num(DATA.cfg.puestos_liguilla) ?? 4;
-        const repechaje = num(DATA.cfg.puestos_repechaje) ?? 2;
-
-        $('standings-legend').innerHTML = [
-            liguilla > 0 ? `<div class="flex items-center"><span class="w-3 h-3 rounded-full bg-brand-500 mr-2"></span> Clasificación a Liguilla (1° - ${liguilla}°)</div>` : '',
-            repechaje > 0 ? `<div class="flex items-center"><span class="w-3 h-3 rounded-full bg-amber-500 mr-2"></span> Repechaje (${liguilla + 1}° - ${liguilla + repechaje}°)</div>` : ''
-        ].join('');
-
-        const tabla = cat ? calcularTabla(cat) : [];
-        if (!tabla.length) {
-            tbody.innerHTML = `<tr><td colspan="11" class="py-10 text-center text-slate-400">Todavía no hay equipos cargados.</td></tr>`;
-            return;
-        }
-        const conDescuento = tabla.filter(t => t.descuento);
-        $('standings-nota').classList.toggle('hidden', !conDescuento.length);
-        $('standings-nota').textContent = conDescuento.map(t => `* ${t.name}: ${t.descuento > 0 ? '-' : '+'}${Math.abs(t.descuento)} pts por resolución del Tribunal.`).join(' ');
-
-        const badge = r => r === 'G' ? 'bg-emerald-500' : r === 'E' ? 'bg-slate-400' : 'bg-rose-500';
-        tbody.innerHTML = tabla.map(t => {
-            let cls = 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
-            if (t.pos <= liguilla) cls = 'bg-brand-500 text-white';
-            else if (t.pos <= liguilla + repechaje) cls = 'bg-amber-500 text-white';
-            const dg = t.dg > 0 ? `+${t.dg}` : t.dg;
-            return `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
-                    <td class="py-3.5 px-4 text-center"><span class="w-6 h-6 rounded-lg ${cls} text-xs font-bold inline-flex items-center justify-center">${t.pos}</span></td>
-                    <td class="py-3.5 px-4 font-bold text-slate-900 dark:text-white whitespace-nowrap">
-                        <i class="fa-solid fa-shield mr-2" style="color:${colorDe(t.name, cat)}"></i>${esc(t.name)}${t.descuento ? '<span class="text-rose-500">*</span>' : ''}
-                    </td>
-                    <td class="py-3.5 px-3 text-center font-extrabold text-base text-slate-900 dark:text-white">${t.pts}</td>
-                    <td class="py-3.5 px-3 text-center text-slate-600 dark:text-slate-300">${t.pj}</td>
-                    <td class="py-3.5 px-3 text-center hidden sm:table-cell text-slate-600 dark:text-slate-300">${t.pg}</td>
-                    <td class="py-3.5 px-3 text-center hidden sm:table-cell text-slate-600 dark:text-slate-300">${t.pe}</td>
-                    <td class="py-3.5 px-3 text-center hidden sm:table-cell text-slate-600 dark:text-slate-300">${t.pp}</td>
-                    <td class="py-3.5 px-3 text-center hidden md:table-cell text-slate-600 dark:text-slate-300">${t.gf}</td>
-                    <td class="py-3.5 px-3 text-center hidden md:table-cell text-slate-600 dark:text-slate-300">${t.gc}</td>
-                    <td class="py-3.5 px-3 text-center hidden md:table-cell font-medium text-slate-600 dark:text-slate-300">${dg}</td>
-                    <td class="py-3.5 px-4 hidden lg:table-cell"><div class="flex items-center justify-center space-x-1">
-                        ${t.form.map(r => `<span class="w-5 h-5 rounded-full ${badge(r)} text-white text-[10px] font-bold flex items-center justify-center">${r}</span>`).join('')}
-                    </div></td>
-                </tr>`;
-        }).join('');
-    }
-
-    function renderMatches() {
-        const grid = $('matches-grid');
-        const jornada = DATA.jornadas[indiceJornada];
-        const filtro = $('match-category-filter').value;
-        $('matchday-label').textContent = jornada ? `Jornada ${jornada}` : 'Sin jornadas';
-        if (!jornada) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-slate-400 text-sm">Todavía no hay partidos cargados.</div>`; return; }
-
-        const lista = DATA.partidos.filter(p => p.jornada === jornada && (filtro === 'todas' || p.cat === filtro));
-        if (!lista.length) {
-            grid.innerHTML = `<div class="col-span-full text-center py-10 text-slate-400 text-sm">No hay partidos de esta categoría en la Jornada ${jornada}.</div>`;
-            return;
-        }
-        grid.innerHTML = lista.map(m => {
-            const catCls = COLORES_CATEGORIA[DATA.categorias.indexOf(m.cat) % COLORES_CATEGORIA.length];
-            let estado;
-            if (m.estado) estado = `<span class="px-2.5 py-0.5 rounded-md bg-rose-500/15 text-rose-600 dark:text-rose-400 text-xs font-bold">${esc(m.estado)}</span>`;
-            else if (m.jugado) estado = `<span class="px-2.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold">Final</span>`;
-            else estado = `<span class="px-2.5 py-0.5 rounded-md bg-brand-500/15 text-brand-600 dark:text-brand-400 text-xs font-bold">${esc(m.horario ? m.horario + ' hs' : 'Programado')}</span>`;
-            const gol = g => g === null ? '-' : g;
-            const ganador = (a, b) => m.jugado && a > b ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-300';
-            return `
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 hover:border-brand-500/50 transition">
-                    <div class="flex justify-between items-center text-xs mb-3">
-                        <span class="px-2.5 py-0.5 rounded-md font-bold uppercase tracking-wider text-[10px] ${catCls}">${esc(m.cat)}</span>
-                        ${estado}
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-sm ${ganador(m.gl, m.gv)}"><i class="fa-solid fa-shield mr-2" style="color:${colorDe(m.local, m.cat)}"></i>${esc(m.local)}</span>
-                            <span class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700/70 flex items-center justify-center font-extrabold text-sm">${gol(m.gl)}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-sm ${ganador(m.gv, m.gl)}"><i class="fa-solid fa-shield mr-2" style="color:${colorDe(m.visitante, m.cat)}"></i>${esc(m.visitante)}</span>
-                            <span class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700/70 flex items-center justify-center font-extrabold text-sm">${gol(m.gv)}</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/70 text-xs text-slate-400 flex justify-between items-center gap-2">
-                        <span>${m.cancha ? `<i class="fa-solid fa-location-dot mr-1 text-slate-500"></i> ${esc(m.cancha)}` : ''}</span>
-                        <span class="whitespace-nowrap">${esc(m.fecha)}</span>
-                    </div>
-                </div>`;
-        }).join('');
-    }
-
-    function changeMatchday(delta) {
-        const sig = indiceJornada + delta;
-        if (sig < 0 || sig >= DATA.jornadas.length) { showToast('No hay más jornadas cargadas.'); return; }
-        indiceJornada = sig;
-        renderMatches();
-    }
-
-    function renderScorers() {
-        const lista = [...(DATA_RAW.Goleadores || [])]
-            .filter(g => txt(g.jugador) && num(g.goles) !== null)
-            .sort((a, b) => num(b.goles) - num(a.goles) || (num(a.pj) ?? 99) - (num(b.pj) ?? 99))
-            .slice(0, 10);
-        $('scorers-list').innerHTML = lista.length ? lista.map((p, i) => {
-            const detalle = [txt(p.equipo), txt(p.categoria), num(p.pj) !== null ? `${num(p.pj)} PJ` : ''].filter(Boolean).join(' • ');
-            return `
-                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-700/40">
-                    <div class="flex items-center space-x-3">
-                        <span class="w-6 h-6 rounded-full ${i === 0 ? 'bg-amber-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'} text-xs font-bold flex items-center justify-center">${i + 1}</span>
-                        <div><p class="font-bold text-sm text-slate-900 dark:text-white">${esc(p.jugador)}</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">${esc(detalle)}</p></div>
-                    </div>
-                    <div class="text-right"><span class="text-lg font-black text-brand-600 dark:text-brand-400">${num(p.goles)}</span>
-                        <span class="text-xs text-slate-400 block leading-none">Goles</span></div>
-                </div>`;
-        }).join('') : '<p class="text-sm text-slate-400">Todavía no hay goleadores cargados.</p>';
-    }
-
-    function renderKeepers() {
-        const lista = [...(DATA_RAW.Vallas || [])]
-            .filter(v => txt(v.arquero) && num(v.pj))
-            .map(v => ({ ...v, gr: num(v.goles_recibidos) ?? 0, pj: num(v.pj) }))
-            .sort((a, b) => a.gr / a.pj - b.gr / b.pj || b.pj - a.pj)
-            .slice(0, 5);
-        $('keepers-list').innerHTML = lista.length ? lista.map((v, i) => `
-            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-700/40">
-                <div class="flex items-center space-x-3">
-                    <span class="font-bold text-slate-400 w-5">${i + 1}.</span>
-                    <div><p class="font-semibold text-sm text-slate-900 dark:text-white">${esc(v.arquero)}</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">${esc([txt(v.equipo), txt(v.categoria)].filter(Boolean).join(' • '))}</p></div>
-                </div>
-                <span class="px-3 py-1 rounded-lg ${i === 0 ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'} font-bold text-xs whitespace-nowrap">${v.gr} goles en ${v.pj} PJ</span>
-            </div>`).join('') : '<p class="text-sm text-slate-400">Todavía no hay datos cargados.</p>';
-    }
-
-    function renderFederales() {
-        const lista = (DATA_RAW.Federales || []).filter(f => txt(f.club));
-        const seccion = $('federales');
-        seccion.classList.toggle('hidden', !lista.length);
-        document.querySelectorAll('a[href="#federales"]').forEach(a => a.classList.toggle('!hidden', !lista.length));
-        $('federales-grid').innerHTML = lista.map(f => {
-            const visitante = txt(f.condicion).toLowerCase().startsWith('v');
-            const proximo = txt(f.proximo_local) || txt(f.proximo_visitante);
-            return `
-                <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 sm:p-6">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                        ${txt(f.torneo) ? `<span class="px-3 py-1 rounded-lg bg-sky-500/20 text-sky-300 text-xs font-bold uppercase">${esc(f.torneo)}</span>` : ''}
-                        ${txt(f.situacion) ? `<span class="text-xs font-semibold text-emerald-400"><i class="fa-solid fa-circle text-[8px] mr-1"></i> ${esc(f.situacion)}</span>` : ''}
-                    </div>
-                    <div class="flex items-center space-x-4 mb-5">
-                        <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-2xl shrink-0" style="color:${colorEquipo(f.color)}"><i class="fa-solid fa-shield-halved"></i></div>
-                        <div><h3 class="text-xl font-extrabold">${esc(f.club)}</h3>
-                            <p class="text-xs text-slate-300">${esc(['Representante local', txt(f.fase)].filter(Boolean).join(' • '))}</p></div>
-                    </div>
-                    ${proximo ? `
-                    <div class="bg-slate-950/50 rounded-xl p-3 sm:p-4 border border-white/10">
-                        <div class="flex items-center justify-between gap-2 mb-2">
-                            <span class="text-xs text-slate-400 uppercase font-semibold">Próximo compromiso</span>
-                            ${txt(f.horario) ? `<span class="px-2.5 py-0.5 rounded bg-sky-500/20 text-sky-300 text-xs whitespace-nowrap">${esc(f.horario)}</span>` : ''}
-                        </div>
-                        <div class="flex items-center justify-between gap-3 font-bold text-sm sm:text-base">
-                            <span class="flex-1 min-w-0">${esc(f.proximo_local)}</span>
-                            <span class="shrink-0 text-xs text-slate-500 font-black">VS</span>
-                            <span class="flex-1 min-w-0 text-right">${esc(f.proximo_visitante)}</span>
-                        </div>
-                        ${txt(f.lugar) ? `<div class="text-xs text-slate-400 mt-2"><i class="fa-solid ${visitante ? 'fa-bus' : 'fa-location-dot'} mr-1.5 text-sky-400"></i> ${esc(f.lugar)}${txt(f.condicion) ? ` (${esc(f.condicion)})` : ''}</div>` : ''}
-                    </div>` : ''}
-                </div>`;
-        }).join('');
-    }
-
-    function renderNoticias() {
-        const lista = (DATA_RAW.Noticias || []).filter(n => txt(n.titulo)).slice(0, 6);
-        const seccion = $('noticias');
-        seccion.classList.toggle('hidden', !lista.length);
-        $('noticias-grid').innerHTML = lista.map(n => {
-            const img = linkSeguro(n.imagen);
-            const link = linkSeguro(n.link);
-            const portada = img
-                ? `<img src="${esc(img)}" alt="" loading="lazy" class="w-full h-48 object-cover" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'w-full h-48 bg-gradient-to-br from-brand-600 to-slate-800'}))">`
-                : `<div class="w-full h-48 bg-gradient-to-br from-brand-600 to-slate-800 flex items-center justify-center text-white/30 text-5xl"><i class="fa-solid fa-newspaper"></i></div>`;
-            return `
-                <article class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
-                    ${portada}
-                    <div class="p-6 flex-1 flex flex-col justify-between">
-                        <div>
-                            ${txt(n.seccion) ? `<span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">${esc(n.seccion)}</span>` : ''}
-                            <h3 class="font-bold text-lg text-slate-900 dark:text-white mt-2">${esc(n.titulo)}</h3>
-                            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">${esc(n.resumen)}</p>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs text-slate-400">
-                            <span>${esc(n.fecha)}</span>
-                            ${link ? `<a href="${esc(link)}" target="_blank" rel="noopener" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline">Leer más →</a>` : ''}
-                        </div>
-                    </div>
-                </article>`;
-        }).join('');
-    }
-
-    function mostrarAviso(html, tipo) {
-        const el = $('aviso');
-        const cls = tipo === 'error'
-            ? 'bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950/50 dark:border-rose-900 dark:text-rose-200'
-            : 'bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/40 dark:border-amber-900 dark:text-amber-200';
-        el.innerHTML = `<div class="rounded-xl border px-4 py-3 text-sm ${cls}">${html}</div>`;
-        el.classList.remove('hidden');
-    }
-
-    // =====================================================================
-    // Interacción
-    // =====================================================================
-    const themeIcon = $('theme-icon');
-    $('theme-toggle').addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        const dark = document.documentElement.classList.contains('dark');
-        themeIcon.className = dark ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon';
-    });
-
-    $('mobile-menu-btn').addEventListener('click', () => $('mobile-menu').classList.toggle('hidden'));
-    document.querySelectorAll('#mobile-menu a').forEach(a => a.addEventListener('click', () => $('mobile-menu').classList.add('hidden')));
-
-    function openInscriptionModal() { const m = $('inscription-modal'); m.classList.remove('hidden'); m.classList.add('flex'); }
-    function closeInscriptionModal() { const m = $('inscription-modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
-    function handleInscription(e) {
-        e.preventDefault();
-        const f = Object.fromEntries(new FormData(e.target));
-        const mensaje = `Hola! Quiero pre-inscribir un equipo.\nEquipo: ${f.equipo}\nCategoría: ${f.categoria}\nDelegado: ${f.delegado}\nTeléfono: ${f.telefono}`;
-        const wa = txt(DATA.cfg.whatsapp).replace(/\D/g, '');
-        const mail = txt(DATA.cfg.email);
-        if (wa) window.open(`https://wa.me/${wa}?text=${encodeURIComponent(mensaje)}`, '_blank');
-        else if (mail) window.location.href = `mailto:${mail}?subject=${encodeURIComponent('Pre-inscripción: ' + f.equipo)}&body=${encodeURIComponent(mensaje)}`;
-        closeInscriptionModal();
-        e.target.reset();
-        showToast('¡Listo! Enviá el mensaje para completar la solicitud.');
-    }
-
-    let toastTimeout;
-    function showToast(msg) {
-        const toast = $('toast');
-        $('toast-message').textContent = msg;
-        toast.classList.remove('translate-y-20', 'opacity-0');
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
-    }
-
-    // =====================================================================
-    // Inicio
-    // =====================================================================
-    let DATA_RAW = {};
-    window.addEventListener('DOMContentLoaded', async () => {
-        let resultado;
-        try {
-            resultado = await cargarDatos();
-        } catch (e) {
-            resultado = { datos: {}, demo: false };
-            avisos.push(esc(e.message));
-        }
-        DATA_RAW = resultado.datos;
-        DATA = prepararModelo(DATA_RAW);
-
-        if (resultado.demo) {
-            mostrarAviso('<i class="fa-solid fa-flask mr-2"></i><b>Modo demostración:</b> estos son datos de ejemplo. Para usar los datos reales, pegá el ID de la planilla en <code>SHEET_ID</code>.', 'demo');
-        } else if (avisos.length) {
-            mostrarAviso(`<i class="fa-solid fa-triangle-exclamation mr-2"></i><b>No se pudieron leer todos los datos de la planilla.</b> Revisá que esté compartida como "Cualquier persona con el enlace" y que no se hayan cambiado los nombres de las pestañas ni los títulos de las columnas.<br>${avisos.join('<br>')}`, 'error');
-        }
-
-        // Jornada a mostrar: la de "jornada_actual" o la primera con partidos sin jugar
-        const jCfg = num(DATA.cfg.jornada_actual);
-        let idx = DATA.jornadas.indexOf(jCfg);
-        if (idx < 0) {
-            const pendiente = DATA.partidos.filter(p => !p.jugado).map(p => p.jornada).sort((a, b) => a - b)[0];
-            idx = pendiente !== undefined ? DATA.jornadas.indexOf(pendiente) : DATA.jornadas.length - 1;
-        }
-        indiceJornada = Math.max(0, idx);
-
-        aplicarConfig();
-        renderCategoryButtons();
-        if (DATA.categorias.length) switchCategory(DATA.categorias[0]); else renderStandings();
-        renderHero();
-        renderMatches();
-        renderScorers();
-        renderKeepers();
-        renderFederales();
-        renderNoticias();
-    });
+        // Cargar Primera División por defecto al abrir la página
+        cambiarCategoria('primera');
     </script>
 </body>
 </html>
