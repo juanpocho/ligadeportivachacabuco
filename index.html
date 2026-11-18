@@ -119,26 +119,29 @@
         © 2027 Liga Oficial de Fútbol · Todos los derechos reservados.
     </footer>
 
-    <!-- SCRIPT DE CONEXIÓN A GOOGLE SHEETS -->
+   <!-- SCRIPT DE CONEXIÓN A GOOGLE SHEETS -->
     <script>
-        // PEGA AQUÍ LOS 3 ENLACES CSV DE CADA PESTAÑA DE TU GOOGLE SHEETS
+        // 1. TUS TRES ENLACES CSV DE POSICIONES
         const URLS_CATEGORIAS = {
             primera: {
                 nombre: "Primera División",
-                csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTM8z7E1hrPT1j5iaJMlGlY9FwKefToG0B4w7ULqJE30uk8nsxSBqHWXL2tz6HOgQ/pub?gid=2053709501&single=true&output=csv"
+                filtroSheet: "Primera",
+                csv: "AQUÍ_PEGAS_EL_LINK_CSV_DE_PRIMERA"
             },
             sub23: {
                 nombre: "Sub-23",
-                csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTM8z7E1hrPT1j5iaJMlGlY9FwKefToG0B4w7ULqJE30uk8nsxSBqHWXL2tz6HOgQ/pub?gid=252241112&single=true&output=csv"
+                filtroSheet: "Sub-23",
+                csv: "AQUÍ_PEGAS_EL_LINK_CSV_DE_SUB23"
             },
             femenino: {
                 nombre: "Femenino",
-                csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSUVZ3wazy0O6df5zd3Ig2aec7Q7oz2vuYTgDu8Golg8RtA0SnynmjNDBRa0k9jreNla26yID8y68iK/pub?gid=1193356216&single=true&output=csv"
+                filtroSheet: "Femenino",
+                csv: "AQUÍ_PEGAS_EL_LINK_CSV_DE_FEMENINO"
             }
         };
 
-        // 2. PEGA AQUÍ EL ENLACE CSV DE LA PESTAÑA "Resultados"
-        const URL_RESULTADOS_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTM8z7E1hrPT1j5iaJMlGlY9FwKefToG0B4w7ULqJE30uk8nsxSBqHWXL2tz6HOgQ/pub?gid=1159073255&single=true&output=csv";
+        // 2. EL ENLACE CSV DE LA NUEVA PESTAÑA "Resultados"
+        const URL_RESULTADOS_CSV = "AQUÍ_PEGAS_EL_LINK_CSV_DE_RESULTADOS";
 
         let categoriaActual = "primera";
         let todosLosPartidos = [];
